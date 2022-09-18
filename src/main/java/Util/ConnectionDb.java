@@ -10,9 +10,9 @@ public class ConnectionDb {
     public static Connection getConnection(){
         if(conn == null){
             try{
-                String url = "jdbc:sqlserver://localhost:1433;TrustServerCertificate=True";
-                String username = "sa";
-                String password = "P@SSWORD123";
+                String url = "jdbc:sqlserver://iceshop.database.windows.net;database=db1;TrustServerCertificate=True";
+                String username = "abdel";
+                String password = "Password123#";
                 conn = DriverManager.getConnection(url, username, password);
             }catch(SQLException e){
                 e.printStackTrace();

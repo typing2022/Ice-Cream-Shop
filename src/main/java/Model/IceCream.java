@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class IceCream extends Product {
-    // instance variables with a private access modifier
-    private ArrayList<String> toppings = new ArrayList<>();
-
 
     //first version of constructor
     public IceCream(){};
+
+    public IceCream(String name, double amount){
+        this.name = name;
+        this.amount = amount;
+
+
+    }
 
     //second version of constructor
     public IceCream(int id,String name, double amount){
@@ -21,7 +25,7 @@ public class IceCream extends Product {
 
     }
 
-    //Generate our Getters and Setters
+    //Generating  Getters and Setters
     public int getId(){ return  this.id;
     }
     public String getName(){
@@ -37,26 +41,12 @@ public class IceCream extends Product {
     public void setAmount(double amount){
         this.amount = amount;
     }
-    public ArrayList<String> getTopping (){
-        return toppings;
-    }
-    public void setTopping(ArrayList<String> toppings){
-        this.toppings = toppings;
-    }
 
-
-    //method for adding topping to the toppings list.
-    public void addToppings(String topping){
-        toppings.add(topping);
-
-    }
-    //method for printing IceCream object data.
     @Override
     public String toString(){
         return "Ice Cream name: " + name  +   "    Amount:" + amount ;
     }
 
-    //method for ordering  ice creams and return a list of ice cream object.
     @Override
     public ArrayList<Product> orderingItems() {
         Scanner sc = new Scanner(System.in);
@@ -66,29 +56,25 @@ public class IceCream extends Product {
 
         do{//iterate  to order  more than one ice cream
 
-                IceCreamService iceCreamList = new IceCreamService();
-                List<IceCream> list = new ArrayList<>();
+            IceCreamService iceCreamList = new IceCreamService();
+            List<IceCream> list = new ArrayList<>();
 
-                 list = iceCreamList.getAllIceCreams();
+            list = iceCreamList.getAllIceCreams();
 
-                System.out.println("\nPlease select one  ice cream:\n");
-                String str = "";
-                for (IceCream ice: list ){
-                      str = str + ice.getId() + ")" + ice.getName() + "\n" ;
-                }
-                System.out.println(str);
+            System.out.println("\nPlease select one  ice cream:\n");
+            String str = "";
+            for (IceCream ice: list ){
+                 str = str + ice.getId() + ")   " + ice.getName() + "\n" ;
+            }
+            System.out.println(str);
 
-                choice = sc.nextInt();
+            choice = sc.nextInt();
 
-
-
-            IceCream ice = new IceCream();
+            //Creating and initializing IceCream object
+            IceCream ice ;
             ice = iceCreamList.getIceCreamById(choice);
-            //Creating object of Icecream
-            //IceCream iceCream = new IceCream(id,name,amount);
-//'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
+            //Adding IceCream object to products list
             products.add( ice);
 //...................................................................................
             System.out.println("==========================================================");
@@ -106,6 +92,7 @@ public class IceCream extends Product {
 
         // return list of products
         return products;
+
 
     }// orderingItems
 

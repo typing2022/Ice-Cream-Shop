@@ -1,0 +1,25 @@
+[INFO ] 2022-09-03 19:46:25.592 [main] userLoggerDB - delete ali
+[INFO ] 2022-09-04 16:59:29.873 [main] userLoggerDB - New user user Name='sara', password='123', user Role='user'
+[INFO ] 2022-09-04 17:05:40.428 [main] userLoggerDB - New user taha
+[INFO ] 2022-09-05 08:15:48.794 [main] userLoggerDB - delete sara
+[INFO ] 2022-09-05 19:11:49.481 [main] userLoggerDB - New user sara
+[INFO ] 2022-09-05 19:13:08.054 [main] userLoggerDB - delete sara
+[INFO ] 2022-09-05 20:35:54.880 [main] userLoggerDB - New user sara
+[INFO ] 2022-09-05 20:49:32.416 [main] userLoggerDB - delete sara
+[INFO ] 2022-09-05 21:19:21.242 [main] userLoggerDB - add New user:  taha
+[INFO ] 2022-09-05 21:41:08.525 [main] userLoggerDB - delete user: taha
+[INFO ] 2022-09-05 21:41:49.806 [main] userLoggerDB - delete user: taha
+[INFO ] 2022-09-05 21:45:11.369 [main] userLoggerDB - add New user:  ahmed
+[INFO ] 2022-09-05 21:45:47.593 [main] userLoggerDB - delete user: ahmed
+[INFO ] 2022-09-06 06:42:47.699 [main] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-06 06:51:15.523 [main] userLoggerDB - add New user:  taha
+[INFO ] 2022-09-06 08:27:38.276 [main] userLoggerDB - delete user: sara
+[INFO ] 2022-09-06 11:35:33.520 [main] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-16 08:42:31.200 [JettyServerThreadPool-21] userLoggerDB - add New user:  taha
+[INFO ] 2022-09-16 20:19:36.618 [JettyServerThreadPool-33] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-17 11:31:17.219 [JettyServerThreadPool-41] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-17 11:34:50.961 [JettyServerThreadPool-39] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-18 16:29:47.646 [JettyServerThreadPool-30] userLoggerDB - add New user:  taha
+[INFO ] 2022-09-18 16:41:04.410 [JettyServerThreadPool-21] userLoggerDB - add New user:  taha
+[INFO ] 2022-09-18 16:42:40.527 [JettyServerThreadPool-28] userLoggerDB - add New user:  sara
+[INFO ] 2022-09-18 16:46:19.197 [JettyServerThreadPool-21] userLoggerDB - delete user who Id number is: 9

@@ -10,6 +10,11 @@ public class Drink extends Product{
     //first version of constructor
     public Drink(){}
     //second version of constructor
+    public Drink(String name, double amount){
+        this.name = name;
+        this.amount = amount;
+
+    }
     public Drink(int id,String name, double amount){
         this.id = id;
         this.name = name;
@@ -24,17 +29,14 @@ public class Drink extends Product{
     public String getName(){
         return name;
     }
-    //public void setName(String name){
-     //   this.name = name;
-   // }
-    public double getAmount(){
+     public double getAmount(){
         return amount;
     }
     public void setAmount(double amount){
         this.amount = amount;
     }
 
-    //method for printing drink object data.
+
     @Override
     public String toString(){
         return "Drink name:     " + name  +  "  Amount: " + amount ;
@@ -51,47 +53,48 @@ public class Drink extends Product{
         boolean ordering = false;
 
         do {//iterate for continue  ordering more than one drink
-            //do{//iterate for checking that a customer selected  one number between 1 : 4 only
 
-                DrinkService drinkList = new DrinkService();
-                List<Drink> list1 = new ArrayList<>();
+            DrinkService drinkList = new DrinkService();
+            List<Drink> list1 = new ArrayList<>();
 
-                list1 = drinkList.getAllDrinks();
+            list1 = drinkList.getAllDrinks();
 
-                System.out.println("\nPlease select a drink:\n");
+            System.out.println("\nPlease select a drink:\n");
 
-                String str1 = "";
-                for (Drink drink: list1 ){
-                    str1 = str1 + drink.getId() + ")" + drink.getName() + "\n" ;
-                }
-                System.out.println(str1);
+            //printing the list of drinks
+            String str1 = "";
+            for (Drink drink: list1 ){
+                    str1 = str1 + drink.getId() + ")  " + drink.getName() + "\n" ;
+            }
 
-                choice = sc.nextInt();
+            System.out.println(str1);
+            choice = sc.nextInt();
 
-
-           // } while(choice != 1 && choice != 2 & choice != 3 & choice != 4);
-
-            Drink drink = new Drink();
+            //Creating and initializing Drink object
+            Drink drink ;
             drink = drinkList.getDrinkById(choice);
 
-            //creating drink object
-            //Drink drink = new Drink(id,name,amount);
-            //call add method to add drink oject to products list
+
+            //Calling add method to add Drink object to the  products list
             products.add(drink);
 
+            // New user interface
             System.out.println("=========================================================");
             System.out.println("\nDo you want another drink :\n"
                     + "1) yes\n"
                     + "2) no\n"
                     + "and any other number for nothing!");
+
             choice = sc.nextInt();
+
             if(choice == 1){
                 ordering = true;
             }else {
                 ordering = false;
             }
         } while(ordering == true) ;
-        // return list of products
+
+        // return a list of products
         return products;
 
     }//orderingItems()

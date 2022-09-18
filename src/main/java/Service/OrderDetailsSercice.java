@@ -20,14 +20,18 @@ public class OrderDetailsSercice {
         return ordrep.getAllOrderDetails();
     }
 
-    public void OrderDetails(int orderDetailsId, int orderId , List<Product> produts ){
-        //Painting existingPainting = pr.getPaintingByTitle(title);
-        //if(existingPainting == null) {
-        OrderDetails newOrder = new OrderDetails( orderDetailsId,  orderId ,  produts );
-        ordrep.addOrderDetails(newOrder);
-        //}else{
-//            do nothing
-        //}
+    public void addOrderDetails( OrderDetails orderDetails ){
+
+       // OrderDetails newItem = new OrderDetails( orderId ,productName, amount );
+        ordrep.addOrderDetails(orderDetails);
+
+    }
+
+    public int deleteOrderDetails( int id ){
+
+        // OrderDetails newItem = new OrderDetails( orderId ,productName, amount );
+     int num =    ordrep.deleteOrderDetails(id);
+          return num;
     }
 
 

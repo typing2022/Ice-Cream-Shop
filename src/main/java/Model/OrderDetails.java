@@ -14,16 +14,28 @@ public class OrderDetails {
 
     private List<Product> produts = new ArrayList<>();
 
+    //First version of constructor
     public OrderDetails() {
     }
 
+    //Second version of constructor
+    public OrderDetails( int orderId, String productName, double amount  ) {
 
-    public OrderDetails(int orderDetailsId, int orderId ) {
-        this.orderDetailsId = orderDetailsId;
         this.orderId = orderId;
-
+        this.productName = productName;
+        this.amount = amount;
 
     }
+
+    public OrderDetails(int orderDetailsId, int orderId, String productName, double amount  ) {
+        this.orderDetailsId = orderDetailsId;
+        this.orderId = orderId;
+        this.productName = productName;
+        this.amount = amount;
+
+    }
+
+    //Third version of constructor
     public OrderDetails(int orderDetailsId, int orderId , List<Product> produts ) {
         this.orderDetailsId = orderDetailsId;
         this.orderDetailsId = orderDetailsId;
@@ -32,6 +44,8 @@ public class OrderDetails {
 
     }
 
+
+    //Generating  Getters and Setters
     public int getOrderDetailsId() {
         return orderDetailsId;
     }
@@ -70,6 +84,15 @@ public class OrderDetails {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "productName='" + productName + '\'' +
+                ", orderId=" + orderId +
+                ", numberOfProduct=" + numberOfProduct +
+                ", amount=" + amount ;
     }
 }
 

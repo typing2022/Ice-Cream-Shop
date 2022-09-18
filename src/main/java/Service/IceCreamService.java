@@ -1,6 +1,7 @@
 package Service;
 import DAO.IceCreamRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import  Model.IceCream;
 public class IceCreamService {
@@ -23,13 +24,25 @@ public class IceCreamService {
         return icrep.getIceCreamById(id);
     }
 
-    public void addIceCream(int id,String name, double amount){
-        //Painting existingPainting = pr.getPaintingByTitle(title);
-        //if(existingPainting == null) {
-        IceCream newIceCream = new IceCream(id,name, amount);
-        icrep.addIceCream(newIceCream);
-        //}else{
-//            do nothing
-        //}
+    public int getMaxIdNumber() throws SQLException {
+        return icrep.getMaxIdNumber();
     }
+
+    public IceCream getMaxIdNumber2() throws SQLException {
+        return icrep.getMaxIdNumber2();
+    }
+
+    public void addIceCream(String name, double amount){
+
+        IceCream newIceCream = new IceCream(name, amount);
+        icrep.addIceCream(newIceCream);
+
+    }
+
+    public int deleteIceCream(int id){
+      int num = icrep.deleteIceCream(id);
+       return num;
+    }
+
+
 }

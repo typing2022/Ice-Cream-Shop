@@ -22,7 +22,7 @@ public class OrderDetailsRepository {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("Select * From orderDetails");
             while(rs.next()){
-                OrderDetails loadedOrder = new OrderDetails(rs.getInt("orderDetailsId"),rs.getInt("orderId"));
+                OrderDetails loadedOrder = new OrderDetails(rs.getInt("orderDetailsId"),rs.getInt("orderId"), rs.getString("productName"),rs.getDouble("amount"));
                 allOrderDetails.add(loadedOrder);
             }
         }catch(SQLException e){
@@ -38,7 +38,7 @@ public class OrderDetailsRepository {
             statement.setInt(1,orderId );
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
-                OrderDetails or = new OrderDetails( rs.getInt("orderDetailsId"),rs.getInt("orderId"));
+                OrderDetails or = new OrderDetails( rs.getInt("orderDetailsId"),rs.getInt("orderId"), rs.getString("productName"),rs.getDouble("amount"));
                 return or;
             }
         }catch(SQLException e){
@@ -49,17 +49,29 @@ public class OrderDetailsRepository {
 
     public void addOrderDetails(OrderDetails order){
         try{
-            PreparedStatement statement = conn.prepareStatement("insert into OrderDetails( orderDetailsId, productName,orderId,numberOfProduct,amount) " +
-                    "values (?, ?, ? ,? ,?)");
-            statement.setInt(1, order.getOrderDetailsId());
+            PreparedStatement statement = conn.prepareStatement("insert into orderDetails( orderId,productName,amount) " +
+                    "values ( ?, ? ,? )");
+
+            statement.setInt(1, order.getOrderId());
             statement.setString(2, order.getProductName());
-            statement.setInt(3, order.getOrderId());
-            statement.setInt(4, order.getNumberOfProduct());
-            statement.setDouble(1, order.getAmount());
+            statement.setDouble(3, order.getAmount());
             statement.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+
+    public int deleteOrderDetails(int id){
+        try{
+            PreparedStatement statement = conn.prepareStatement("delete from orderDetails where orderId = ? " );
+            statement.setInt(1, id);
+        int num =    statement.executeUpdate();
+        return num;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

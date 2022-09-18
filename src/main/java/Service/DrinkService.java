@@ -4,6 +4,7 @@ import DAO.IceCreamRepository;
 import Model.Drink;
 import Model.IceCream;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class DrinkService {
@@ -25,13 +26,23 @@ public class DrinkService {
         return drep.getDrinkById(id);
     }
 
-    public void addDrink(int id,String name, double amount){
-        //Painting existingPainting = pr.getPaintingByTitle(title);
-        //if(existingPainting == null) {
-        Drink newDrink = new Drink(id,name, amount);
+    public int getMaxIdNumber() throws SQLException {
+
+           return drep.getMaxIdNumber();
+
+
+    }
+
+    public void addDrink(String name, double amount){
+
+        Drink newDrink = new Drink(name, amount);
         drep.addDrink(newDrink);
-        //}else{
-//            do nothing
-        //}
+
+    }
+
+    public int deleteDrink(int id){
+
+      int num =  drep.deleteDrink(id);
+      return num;
     }
 }

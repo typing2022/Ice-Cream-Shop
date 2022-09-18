@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class IceCreamRepository {
     Connection conn;
 
@@ -57,18 +59,75 @@ public class IceCreamRepository {
         }
         return null;
     }
+
+    public int getMaxIdNumber() throws SQLException {
+        //List<Order> allOrders = new ArrayList<>();
+       int num = 0;
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("Select max(Id) as maxNumber From icecream");
+            while(rs.next()) {
+                //    Order loadedOrder = new Order(rs.getInt("Orderid"),rs.getString("date"),rs.getDouble("tax"), rs.getDouble("amount"), rs.getDouble("totalAmount"));
+                //   allOrders.add(loadedOrder);
+                num = rs.getInt("maxNumber");
+               // IceCream ic = new IceCream(rs.getInt("maxNumber"),"",0);
+                //num = rs.getInt("maxNumber");
+
+
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public IceCream getMaxIdNumber2() throws SQLException {
+        //List<Order> allOrders = new ArrayList<>();
+        // int num = 0;
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("Select max(Id) as maxNumber From icecream");
+            while(rs.next()) {
+                //    Order loadedOrder = new Order(rs.getInt("Orderid"),rs.getString("date"),rs.getDouble("tax"), rs.getDouble("amount"), rs.getDouble("totalAmount"));
+                //   allOrders.add(loadedOrder);
+                //num = rs.getInt("maxNumber");
+                IceCream ic = new IceCream(rs.getInt("maxNumber"),"",0);
+                //num = rs.getInt("maxNumber");
+                return ic;
+
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     public void addIceCream(IceCream ic){
         try{
-            PreparedStatement statement = conn.prepareStatement("insert into iceCream(id ,name, amount) " +
-                    "values (?, ?,?)");
-            statement.setInt(1, ic.getId());
-            statement.setString(2, ic.getName());
-            statement.setDouble(3, ic.getAmount());
+            PreparedStatement statement = conn.prepareStatement("insert into iceCream(name, amount) " +
+                    "values ( ?,?)");
+
+            statement.setString(1, ic.getName());
+            statement.setDouble(2, ic.getAmount());
             statement.executeUpdate();
+            conn.commit();
         }catch(SQLException e){
             e.printStackTrace();
         }
     }
+
+    public int deleteIceCream(int id){
+        try{
+            PreparedStatement statement = conn.prepareStatement("delete from iceCream where id = ? ") ;                    ;
+            statement.setInt(1, id);
+         int num =    statement.executeUpdate();
+            conn.commit();
+            return num;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 
 }

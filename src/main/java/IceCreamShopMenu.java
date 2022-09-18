@@ -1,249 +1,171 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.sql.SQLException;
+import java.sql.SQLOutput;
+import java.util.*;
 
 import java.time.LocalDate;
 import Model.*;
 import Service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.javalin.Javalin;
+import io.javalin.core.JavalinConfig;
+
 public class IceCreamShopMenu {
 
     static boolean loggingDone = false;
     static String typeOfPay = "";
+    static String userRole = "";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-        //connection
-        IceCreamService ics = new IceCreamService();
-        DrinkService drs = new DrinkService();
+        IceCreamService ps = new IceCreamService();
+        DrinkService dr = new DrinkService();
+        LoggingService log = new LoggingService();
+        OrderService ord = new OrderService();
+        OrderDetailsSercice orddet = new OrderDetailsSercice();
+        Javalin app = Javalin.create(JavalinConfig::enableCorsForAllOrigins);
+
+        app.start(9000);
 
 
-        //Creating  object of Scanner
-        Scanner sc = new Scanner(System.in);
+        //*Logging*************************************************************************************
 
-        //String str = stringSC.nextLine();
+        app.get("/iceCreamShop/users/", ctx -> {
+            ctx.json(log.getAllLoggings());
+        });
 
-        //Assgin variable
-        String type = "";
-        String date = "";
-        int choice;
-        String strChoice, strChoice1 = "";
+        app.get("/iceCreamShop/getLogging/{userName},{password}", ctx ->
+        {
 
-        boolean stillworking = true;
+            //ObjectMapper mapper = new ObjectMapper();
+            //Logging  requestLogging = mapper.readValue(ctx.body(), Logging.class);
+            ctx.json(log.getLogging(ctx.pathParam("userName"), ctx.pathParam("password")));
+        });
 
-        //Creating  object of Date
-        LocalDate myObj = LocalDate.now();
-        date = myObj.toString();
+        app.get("/iceCreamShop/getUserById/{id}", ctx -> {
+            ObjectMapper mn = new ObjectMapper();
+            ctx.json(log.getUserById(Integer.parseInt(ctx.pathParam("id"))));
+        });
 
-        while (stillworking == true) { //(1)  the main loop
-            //logging
-            if (loggingDone == false) {
-                layoutOfLogging(stillworking);
+        app.post("/iceCreamShop/addUser/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            Logging requestLogging = mapper.readValue(ctx.body(), Logging.class);
+            log.addLogging(requestLogging.getUserName(), requestLogging.getPassword(), requestLogging.getUserRole());
+        });
+
+        app.get("/iceCreamShop/userDeletion/{id}", ctx -> {
+
+            ctx.json(log.deleteUser(Integer.parseInt(ctx.pathParam("id"))));
+        });
+
+
+        StringBuilder str = new StringBuilder();
+
+        //  String finalStr = str;
+        app.get("/paintings1/", ctx -> {
+            str.setLength(0);
+            ;
+            for (IceCream ice : ps.getAllIceCreams()) {
+                str.append(ice.getId() + " |" + ice.getName() + "| " + ice.getAmount() + " | \n");
+
             }
+            ctx.result("List of ice cream \n" + str);
 
-          //........................................................................................
-            // start ordering
-
-            do {//(2)   iterate for checking that a customer selected  one number between 1 : 2
-
-                System.out.println("\nWelcome to Revature Ice Cream Shop! Please select a number:\n"
-                        + "1) stay here\n"
-                        + "2) to go\n"
-                        + "and any other number for nothing!");
-
-                choice = sc.nextInt();
-
-                switch (choice) {
-                    case 1:
-                        System.out.println("You select here!");
-                        type = "here";
-                         break;
-                    case 2:
-                        System.out.println("You select to go!");
-                        type = "to go";
-                        break;
-                    default:
-                        System.out.println("You have to select one number from numbers between 1 to 2!");
-                        break;
-                }
-            }
-            while (choice != 1 && choice != 2); //(2)
-
-          //..............................................................................................
-            //ordering ice Cream
-
-            //Creating  object of IceCream
-            IceCream iceCream = new IceCream();
+        });
 
 
-            //assign list of product object
-            ArrayList<Product> iceCreamProducts = new ArrayList<>();
-            ArrayList<Product> drinkProducts = new ArrayList<>();
-            ArrayList<Product> products = new ArrayList<>();
+        //app.get("/paintings/", ctx -> {ctx.json(ps.getAllPaintings());});
 
-            //call "orderingItems" method of ice cream  object to return a list of product object
-            iceCreamProducts = iceCream.orderingItems();
+        //*IceCream*************************************************************************************
 
-
-          //......................................................................................
-            // ordering drink
-
-            do {//(3)    iterate for checking that a customer selected  one number between 1 : 2
-                System.out.println("\nDO you want drink:\n"
-                        + "1) Yes\n"
-                        + "2) No\n"
-                        + "and any other number for nothing!");
-
-                choice = sc.nextInt();
-                if (choice == 1) {
-                    //Creating  object of Drink
-                    Drink drink = new Drink();
+        app.get("/iceCreams/", ctx -> {
+            ctx.json(ps.getAllIceCreams());
+        });
 
 
-                    //call "orderingItems" method of drink object and return a list of product object;
-                    drinkProducts = drink.orderingItems();
+        app.get("/iceCreamShop/getMaxNumber/", ctx -> {
+            ctx.json(ord.getMaxNumber());
+        });
+        app.get("/iceCreamShop/getMaxIceNumber/", ctx -> {
+            ctx.json(ps.getMaxIdNumber2());
+        });
 
-                } else if (choice == 2) {
-                    System.out.println("No drink");
-                } else {
-                    System.out.println("You have to select one number from numbers between 1 to 2");
-                }
-            } while (choice != 1 && choice != 2); //(3)
-          //..............,,,,,,,,,,,,,,,,,,,,,,...........................................................
-            //how to pay
+        app.get("/iceCreamShop/getIceCreamByName/{name}", ctx ->
+        {
+//
+            ctx.json(ps.getIceCreamByName(ctx.pathParam("name")));
+        });
 
-            // calling LayoutHowToPay(); method
-            LayoutHowToPay();
-
-          //..................................................................................................
-            // do all calculation and print invoice
-
-            //Creating  object of Invoice
-            Invoice invoice = new Invoice();
-            invoice.setTypeOfPay(typeOfPay);
-
-            //iterate for moving ice cream objects from iceCreamProducts list to products list
-            for (Product product : iceCreamProducts) {
-                products.add(product);
-            }
-
-            //iterate for moving drink objects from drinkProducts list to products list
-            for (Product product : drinkProducts) {
-                products.add(product);
-            }
+        app.get("/iceCreamShop/getIceCreamById/{id}", ctx -> {
+            ObjectMapper mn = new ObjectMapper();
+            ctx.json(ps.getIceCreamById(Integer.parseInt(ctx.pathParam("id"))));
+        });
 
 
-            //Creating  object of order
-            Order order = new Order(date, products);
+        app.post("/iceCreamShop/addIceCream/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            IceCream requestPainting = mapper.readValue(ctx.body(), IceCream.class);
+            ps.addIceCream(requestPainting.getName(), requestPainting.getAmount());
+        });
 
-            //Calling sumAmount method to sum amounts of all object
-            order.sumAmount(products);
+        app.get("/iceCreamShop/iceCreamDeletion/{id}", ctx -> {
 
-            //Calling calculateTax method to calculate the tax
-            try {
-                order.calculateTax();
-            } catch (ArithmeticException ex) {
-                System.out.println("Don't divide by 0!");
-            } catch (Exception e) {
-                System.out.println("Some other exception");
-            }
+            ctx.json(ps.deleteIceCream(Integer.parseInt(ctx.pathParam("id"))));
+        });
 
+        //*Drink*************************************************************************************
+        app.get("/drinks/", ctx -> {
+            ctx.json(dr.getAllDrinks());
+        });
 
-            //Calling printInvoice method to print invoice
-            invoice.printInvoice(order);
+        app.get("/iceCreamShop/getDrinkById/{id}", ctx -> {
+            ObjectMapper mn = new ObjectMapper();
+            ctx.json(dr.getDrinkById(Integer.parseInt(ctx.pathParam("id"))));
+        });
 
-            System.out.println("wawaw");
-            choice = sc.nextInt();
+        app.post("/iceCreamShop/addDrink/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            IceCream requestPainting = mapper.readValue(ctx.body(), IceCream.class);
+            dr.addDrink(requestPainting.getName(), requestPainting.getAmount());
+        });
 
-          //  sc.close();
+        app.get("/iceCreamShop/drinkDeletion/{id}", ctx -> {
 
-        }//(1)
+            ctx.json(dr.deleteDrink(Integer.parseInt(ctx.pathParam("id"))));
+        });
+
+        //*Order*************************************************************************************
+
+        app.post("/iceCreamShop/addOrder/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            Order requestPainting = mapper.readValue(ctx.body(), Order.class);
+            ord.addOrder(requestPainting);
+        });
+
+        app.post("/iceCreamShop/saveOrder/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            Order requestPainting = mapper.readValue(ctx.body(), Order.class);
+            ord.saveOrder(requestPainting);
+        });
+
+        app.get("/iceCreamShop/maxIdNumber/", ctx -> {
+            ctx.json(ord.getMaxNumber());
+        });
+
+        app.get("/iceCreamShop/deleteOrder/{id}", ctx -> {
+            ObjectMapper mn = new ObjectMapper();
+            ctx.json(ord.deleteOrder(Integer.parseInt(ctx.pathParam("id"))));
+        });
+        //*OrderDetails*************************************************************************************
+        app.post("/iceCreamShop/OrderDetailsAddition/", ctx -> {
+            ObjectMapper mapper = new ObjectMapper();
+            OrderDetails requestPainting = mapper.readValue(ctx.body(), OrderDetails.class);
+            orddet.addOrderDetails(requestPainting);
+        });
+
+        app.get("/iceCreamShop/deleteOrderDetails/{id}", ctx -> {
+            ObjectMapper mn = new ObjectMapper();
+            ctx.json(orddet.deleteOrderDetails(Integer.parseInt(ctx.pathParam("id"))));
+        });
+
     }
-
-
-  // layoutOfLogging method for logging
-    public static void layoutOfLogging(boolean stillworking) {
-
-        int choice;
-        String strChoice, strChoice1 = "";
-        Scanner sc = new Scanner(System.in);
-        boolean logging = true;
-        do { // loop for logging
-        System.out.println("Please select a number:\n"
-                + " 1) log in\n"
-                + " 2) quit\n"
-                + "and any other number for nothing!");
-        choice = sc.nextInt();
-
-
-        if (choice == 2) { //if(1)
-            stillworking = false;
-
-        } else {  // check username and password
-            //String username, password = "";
-
-            LoggingService loser = new LoggingService();
-            Logging log = new Logging();
-
-
-
-                //user interface  of logging
-                String username, password = "";
-                Scanner stringSC = new Scanner(System.in);
-
-                System.out.println("Inter user name : ");
-                username = stringSC.nextLine();
-
-                System.out.println("Inter password : ");
-                password = stringSC.nextLine();
-
-                log = loser.getLogging(username, password);
-                if (log == null) {
-                    System.out.println("the user name or password is uncorrect, Try again ");
-                    //continue;
-                    loggingDone = false;
-                } else {
-                    System.out.println("wel come : " + log.getUserName());
-                    loggingDone = true;
-                    logging = false;
-                }
-            } //if(1)
-
-
-        }while (logging == true); // loop for logging
-
-    }//layoutOfLoging
-
-    // LayoutHowToPay method for how pay
-    public static void LayoutHowToPay() {
-
-        int choice;
-        String strChoice, strChoice1 = "";
-        Scanner sc = new Scanner(System.in);
-
-        do { //(4)
-            System.out.println("\nHow to pay:\n"
-                    + "1) cash\n"
-                    + "2) visa or credit card\n"
-                    + "and any other number for nothing!");
-
-            choice = sc.nextInt();
-
-
-            switch (choice) {
-                case 1:
-                    System.out.println("you pay cash!");
-                    typeOfPay = "cash";
-                    break;
-                case 2:
-                    System.out.println("you pay by visa or credit card!");
-                    typeOfPay = "visa or credit card";
-                    break;
-
-                default:
-                    System.out.println("You have to select one number from numbers between 1 to 2 !");
-                    break;
-            }
-
-        } while (choice != 1 && choice != 2); //(4)
-    }
-
 }

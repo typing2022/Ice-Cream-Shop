@@ -59,17 +59,49 @@ public class DrinkRepository {
         }
         return null;
     }
+
+
+    public int getMaxIdNumber() throws SQLException {
+
+        int num = 0;
+
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("Select max(Id) as maxNumber From drink");
+            while(rs.next()) {
+                num = rs.getInt("maxNumber");
+
+            }
+
+        return num;
+    }
+
+
     public void addDrink(Drink drink){
         try{
-            PreparedStatement statement = conn.prepareStatement("insert into drink(id ,name, amount) " +
-                    "values (?, ?,?)");
-            statement.setInt(1, drink.getId());
-            statement.setString(2, drink.getName());
-            statement.setDouble(3, drink.getAmount());
+            PreparedStatement statement = conn.prepareStatement("insert into drink(name, amount) " +
+                    "values (?,?)");
+
+            statement.setString(1, drink.getName());
+            statement.setDouble(2, drink.getAmount());
             statement.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public int deleteDrink(int id){
+        try{
+            PreparedStatement statement = conn.prepareStatement("delete from drink  where id = ? ") ;
+
+            statement.setInt(1, id);
+
+         int num =    statement.executeUpdate();
+         return num;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
 }
